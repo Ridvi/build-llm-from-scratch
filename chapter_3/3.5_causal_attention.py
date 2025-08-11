@@ -96,6 +96,6 @@ context_length=batch.shape[1]
 ca=CausalAttention(d_in,d_out,context_length,0.0)
 context_vecs=ca(batch)
 print(context_vecs)
-#dkjfdf
+
 
 
