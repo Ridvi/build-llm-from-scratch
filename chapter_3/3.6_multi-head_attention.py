@@ -133,3 +133,10 @@ d_out=2
 mha=MultiHeadAttention(d_in,d_out,context_length,0.0,num_heads=2)
 context_vecs=mha(batch)
 print(context_vecs)
+
+
+#exercise 3.3 initializing GPT-2 size attention modules
+
+context_length=1024
+d_in,d_out=768,768
+num_heads=12
