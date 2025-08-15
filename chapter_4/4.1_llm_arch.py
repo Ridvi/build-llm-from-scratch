@@ -16,7 +16,7 @@ class DummyGPTModel(nn.Module):
     def __init__(self,cfg):
         super().__init__()
         self.tok_emb = nn.Embedding(cfg['vocab_size'],cfg['emb_dim'])
-        self.pos_emb = nn.Embedding(cfg['context_length',cfg['emb_dim']])
+        self.pos_emb = nn.Embedding(cfg['context_length'],cfg['emb_dim'])
         self.drop_emb=nn.Dropout(cfg['drop_rate'])
         self.trf_block= nn.Sequential(
             *[DummyTransformerBlock(cfg) for _ in range(cfg['n_layers'])]
@@ -53,3 +53,23 @@ class DummyLayerNorm(nn.Module):
 
     def forward(self,x):
         return x
+    
+
+
+import tiktoken
+
+tokenizer=tiktoken.get_encoding('gpt2')
+
+batch=[]
+txt1='Every effort moves you'
+txt2='Every day holds a'
+
+batch.append(torch.tensor(tokenizer.encode(txt1)))
+batch.append(torch.tensor(tokenizer.encode(txt2)))
+
+batch=torch.stack(batch,dim=0)
+
+torch.manual_seed(123)
+model=DummyGPTModel(GPT_CONFIG_124M)
+logits=model(batch)
+print(logits)
