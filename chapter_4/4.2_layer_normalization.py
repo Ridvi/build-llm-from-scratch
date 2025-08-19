@@ -19,4 +19,4 @@ layer=nn.Sequential(nn.Linear(5,6),nn.ReLU())
 out=layer(batch_example)
 print(out)
 
-#4.2
+#4.2 #layer normalization
