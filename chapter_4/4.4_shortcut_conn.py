@@ -34,11 +34,39 @@ class ExampleDeepNeuralNetwork(nn.Module):
             ]
         )
 
-def forward(self,x):
-    for layer in self.layers:
-        layer_output=layer(x)
-        if self.use_shortcut and x.shape == layer.output_shape:
-            x = x+layer_output
-        else:
-            x=layer_output
+    def forward(self,x):
+        for layer in self.layers:
+            layer_output=layer(x)
+            if self.use_shortcut and x.shape == layer_output.shape:
+                x = x+layer_output
+            else:
+                x=layer_output
         return x
+    
+
+
+layer_sizes=[3,3,3,3,3,1]
+sample_input=torch.tensor([[1.,0.,-1.]])
+torch.manual_seed(123)
+model_without_shortcut=ExampleDeepNeuralNetwork(
+    layer_sizes,use_shortcut=False
+)
+
+def print_gradient(model,x):
+    output=model(x)
+    target=torch.tensor([[0.]])
+    loss=nn.MSELoss()
+    loss=loss(output,target)
+    loss.backward()
+
+
+    for name,param in model.named_parameters():
+        if 'weight' in name:
+            print(f'{name} has gradient mean of {param.grad.abs().mean().item()}')
+
+#print_gradient(model_without_shortcut,sample_input)
+torch.manual_seed(123)
+model_with_shortcut=ExampleDeepNeuralNetwork(
+    layer_sizes,use_shortcut=True
+)
+print_gradient(model_with_shortcut,sample_input)
